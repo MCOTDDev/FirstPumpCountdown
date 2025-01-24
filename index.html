@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Countdown Timer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: black;
+      overflow: hidden;
+      position: relative;
+      color: white;
+    }
+
+    /* Canvas for random stars */
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .countdown {
+      z-index: 1;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .countdown h1 {
+      font-size: 3rem;
+      margin: 0 0 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    .timer {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 6rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* Absolutely positioned image in bottom-right */
+    .my-image {
+      position: absolute;
+      bottom: 8%;
+      right: 8%;
+      width: 300px;     /* Adjust as needed */
+      height: auto;     /* Maintain aspect ratio */
+      z-index: 1;
+    }
+
+  </style>
+</head>
+<body>
+  <canvas class="stars"></canvas>
+
+  <div class="countdown">
+    <h1>Time Till Pump</h1>
+    <div class="timer" id="timer">00:00:00</div>
+  </div>
+
+  <!-- Replace the old placeholder div with your image -->
+  <img class="my-image" src="rocket.png" alt="My Transparent Image"/>
+
+  <script>
+    // Canvas for random stars
+    const canvas = document.querySelector('.stars');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    function drawStars() {
+      const numStars = 150;
+      ctx.fillStyle = 'white';
+      for (let i = 0; i < numStars; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const radius = Math.random() * 1.5;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    drawStars();
+
+    // Countdown logic
+    const targetYear = 2025;
+    const targetMonth = 0;  // 0 = January
+    const targetDay = 25;
+    const targetHour = 20;
+    const targetMinute = 0;
+    const targetSecond = 0;
+
+    function updateTimer() {
+      const now = new Date();
+      const targetDate = new Date(Date.UTC(targetYear, targetMonth, targetDay, targetHour, targetMinute, targetSecond));
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        document.getElementById('timer').innerText = "00:00:00";
+        return;
+      }
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      const hoursStr   = hours.toString().padStart(2, '0');
+      const minutesStr = minutes.toString().padStart(2, '0');
+      const secondsStr = seconds.toString().padStart(2, '0');
+
+      document.getElementById('timer').innerText = `${hoursStr}:${minutesStr}:${secondsStr}`;
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  </script>
+</body>
+</html>
